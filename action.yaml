@@ -10,21 +10,20 @@ inputs:
     required: false
   skip:
     required: false
-    default: "false"
 
 runs:
   using: "composite"
   steps:
 
       - name: before ${{ inputs.test-name }}
-        if: ${{ inputs.before && inputs.skip == "false" }}
+        if: ${{ inputs.before && !inputs.skip }}
         run: |
           ${{ inputs.before }}
 
       - name: run ${{ inputs.test-name }}
         env:
           REPORT_TYPE: ${{ inputs.test-name }}
-        if: ${{ inputs.skip == "false" }}
+        if: ${{ !inputs.skip }}
         run: |
           set -e
           echo -----REPORT-URL------
@@ -33,16 +32,16 @@ runs:
           npm run ${{ inputs.test-name }}
 
       - name: after ${{ inputs.test-name }}
-        if: ${{ inputs.after && inputs.skip == "false" }}
+        if: ${{ inputs.after && !inputs.skip }}
         run: |
           ${{ inputs.after }}
 
       - name: publish report ${{ inputs.test-name }}
-        if: ${{ inputs.skip == "false" && always() }}
+        if: ${{ !inputs.skip && always() }}
         run: |
           set -e
           REPORT_TYPE=${{ inputs.test-name }} npm run ci:test:publish
 
       - name: skip ${{ inputs.test-name }}
-        if: ${{ inputs.skip == "true" }}
+        if: ${{ !!inputs.skip }}
         run: echo skipping ${{ inputs.test-name }}
