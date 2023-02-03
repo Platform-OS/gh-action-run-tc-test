@@ -17,6 +17,7 @@ runs:
 
       - name: before ${{ inputs.test-name }}
         if: ${{ inputs.before && !inputs.skip }}
+        shell: sh
         run: |
           ${{ inputs.before }}
 
@@ -24,6 +25,7 @@ runs:
         env:
           REPORT_TYPE: ${{ inputs.test-name }}
         if: ${{ !inputs.skip }}
+        shell: sh
         run: |
           set -e
           echo -----REPORT-URL------
@@ -33,15 +35,18 @@ runs:
 
       - name: after ${{ inputs.test-name }}
         if: ${{ inputs.after && !inputs.skip }}
+        shell: sh
         run: |
           ${{ inputs.after }}
 
       - name: publish report ${{ inputs.test-name }}
         if: ${{ !inputs.skip && always() }}
+        shell: sh
         run: |
           set -e
           REPORT_TYPE=${{ inputs.test-name }} npm run ci:test:publish
 
       - name: skip ${{ inputs.test-name }}
         if: ${{ !!inputs.skip }}
+        shell: sh
         run: echo skipping ${{ inputs.test-name }}
