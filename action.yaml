@@ -17,7 +17,7 @@ runs:
       - name: before ${{ inputs.test-name }}
         if: ${{ inputs.before && !inputs.skip }}
         run: |
-          ${{ inputs.before }}"
+          ${{ inputs.before }}
 
       - name: run ${{ inputs.test-name }}
         env:
@@ -25,13 +25,15 @@ runs:
         if: ${{ !inputs.skip }}
         run: |
           set -e
-          npm run report-info
-          REPORT_TYPE=${{ inputs.test-name }} npm run ${{ inputs.test-name }}
+          echo -----REPORT-URL------
+          echo $UPLOAD_HOST/$REPORT_PATH-$REPORT_TYPE
+          echo --------------
+          npm run ${{ inputs.test-name }}
 
       - name: after ${{ inputs.test-name }}
         if: ${{ inputs.after && !inputs.skip }}
         run: |
-          ${{ inputs.after }}"
+          ${{ inputs.after }}
 
       - name: publish report ${{ inputs.test-name }}
         if: ${{ !inputs.skip && always() }}
