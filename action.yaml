@@ -1,0 +1,44 @@
+name: 'Run TestCafe'
+description: run TestCafe test
+inputs:
+  test-name:  # id of input
+    description: 'test name'
+    required: true
+  before:
+    required: false
+  after:
+    required: false
+  skip:
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+      - name: before ${{ inputs.test-name }}
+        if: ${{ inputs.before && !inputs.skip }}
+        run: |
+          ${{ inputs.before }}"
+
+      - name: run ${{ inputs.test-name }}
+        env:
+          REPORT_TYPE: ${{ inputs.test-name }}
+        if: ${{ !inputs.skip }}
+        run: |
+          set -e
+          npm run report-info
+          REPORT_TYPE=${{ inputs.test-name }} npm run ${{ inputs.test-name }}
+
+      - name: after ${{ inputs.test-name }}
+        if: ${{ inputs.after && !inputs.skip }}
+        run: |
+          ${{ inputs.after }}"
+
+      - name: publish report ${{ inputs.test-name }}
+        if: ${{ !inputs.skip && always() }}
+        run: |
+          set -e
+          REPORT_TYPE=${{ inputs.test-name }} npm run ci:test:publish
+
+      - name: skip ${{ inputs.test-name }}
+        if: ${{ !!inputs.skip }}
+        run: echo skipping ${{ inputs.test-name }}
