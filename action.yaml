@@ -1,7 +1,7 @@
 name: 'Run TestCafe'
 description: run TestCafe test
 inputs:
-  test-name:  # id of input
+  test-name:
     description: 'test name'
     required: true
   before:
@@ -14,6 +14,7 @@ inputs:
 runs:
   using: "composite"
   steps:
+
       - name: before ${{ inputs.test-name }}
         if: ${{ inputs.before && !inputs.skip }}
         run: |
