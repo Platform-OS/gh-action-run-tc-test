@@ -1,4 +1,4 @@
-name: 'Run TestCafe'
+name: 'platformOS/RunTestCafeTest'
 description: run TestCafe test
 inputs:
   test-name:
