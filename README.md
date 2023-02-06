@@ -8,21 +8,21 @@
 
 ## usage
 
-  tests:
-    env:
-      REPORT_PATH: ${{ needs.reserve-ci-instance.outputs.report-path }}
-      UPLOAD_HOST: https://tests.qa0.oregon.platformos.com
+    tests:
+      env:
+        REPORT_PATH: ${{ needs.reserve-ci-instance.outputs.report-path }}
+        UPLOAD_HOST: https://tests.qa0.oregon.platformos.com
       
-    steps:
-    - uses: Platform-OS/gh-action-run-tc-test@0.0.7
-      with:
-        test-name: tc-orders
-        before: |
-          pos-cli constants set --name ORDER_PAYMENT_LOCK_MINUTES --value 0
-          pos-cli constants set --name ORDER_CANCEL_UNPAID_AFTER_X_HOURS --value 100000
-        after: |
-          pos-cli constants set --name ORDER_PAYMENT_LOCK_MINUTES --value 1
-          pos-cli constants set --name ORDER_CANCEL_UNPAID_AFTER_X_HOURS --value 1
+      steps:
+      - uses: Platform-OS/gh-action-run-tc-test@0.0.7
+        with:
+          test-name: tc-orders
+          before: |
+            pos-cli constants set --name ORDER_PAYMENT_LOCK_MINUTES --value 0
+            pos-cli constants set --name ORDER_CANCEL_UNPAID_AFTER_X_HOURS --value 100000
+          after: |
+            pos-cli constants set --name ORDER_PAYMENT_LOCK_MINUTES --value 1
+            pos-cli constants set --name ORDER_CANCEL_UNPAID_AFTER_X_HOURS --value 1
           
           
 ### skipping action
