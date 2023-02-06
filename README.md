@@ -3,6 +3,8 @@
  It automatically:
  - runs NPM script
  - publish a test report
+ 
+ the report will be published under the $UPLOAD_HOST/$REPORT_PATH-`test-name` URL, so these two environment variables are required.
 
 ## usage
 
