@@ -1,5 +1,8 @@
 # gh-action-run-tc-test
-gh composite action to run tc test
+
+ It automatically:
+ - runs NPM script
+ - publish a test report
 
 ## usage
 
