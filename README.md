@@ -3,7 +3,7 @@ gh composite action to run tc test
 
 ## usage
 
-    - uses: "./actions/tc"
+    - uses: Platform-OS/gh-action-run-tc-test@0.0.7
       with:
         test-name: tc-orders
         before: |
@@ -12,3 +12,11 @@ gh composite action to run tc test
         after: |
           pos-cli constants set --name ORDER_PAYMENT_LOCK_MINUTES --value 1
           pos-cli constants set --name ORDER_CANCEL_UNPAID_AFTER_X_HOURS --value 1
+          
+          
+### skipping action
+
+    - uses: Platform-OS/gh-action-run-tc-test@0.0.7
+      with:
+        skip: true
+        test-name: tc-orders
