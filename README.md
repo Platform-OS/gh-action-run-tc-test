@@ -11,7 +11,7 @@
     tests:
       env:
         REPORT_PATH: ${{ needs.reserve-ci-instance.outputs.report-path }}
-        UPLOAD_HOST: https://tests.qa0.oregon.platformos.com
+        UPLOAD_HOST: POS_CLI_INSTANCE_FOR_TEST_REPORTS
       
       steps:
       - uses: Platform-OS/gh-action-run-tc-test@0.0.7
