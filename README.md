@@ -4,10 +4,15 @@
  - runs NPM script
  - publish a test report
  
- the report will be published under the $UPLOAD_HOST/$REPORT_PATH-`test-name` URL, so these two environment variables are required.
+ the report will be published under the $UPLOAD_HOST/$REPORT_PATH-`test-name` URL, so these two environment variables are required. See usage for details.
 
 ## usage
-
+  tests:
+    env:
+      REPORT_PATH: ${{ needs.reserve-ci-instance.outputs.report-path }}
+      UPLOAD_HOST: https://tests.qa0.oregon.platformos.com
+      
+    steps:
     - uses: Platform-OS/gh-action-run-tc-test@0.0.7
       with:
         test-name: tc-orders
