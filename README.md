@@ -7,6 +7,7 @@
  the report will be published under the $UPLOAD_HOST/$REPORT_PATH-`test-name` URL, so these two environment variables are required. See usage for details.
 
 ## usage
+
   tests:
     env:
       REPORT_PATH: ${{ needs.reserve-ci-instance.outputs.report-path }}
