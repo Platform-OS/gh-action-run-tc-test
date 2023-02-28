@@ -61,6 +61,7 @@ runs:
         if: ${{ !inputs.skip && failure() }}
         shell: sh
         run: |
+          REPORT_TYPE=${{ inputs.test-name }}
           echo "### FAILED $REPORT_TYPE tests report -> $UPLOAD_HOST/$REPORT_PATH-$REPORT_TYPE" >> $GITHUB_STEP_SUMMARY
 
       - name: skip ${{ inputs.test-name }}
