@@ -12,7 +12,7 @@ inputs:
     required: false
   npm-prefix:
     required: false
-    default: ""
+    default: "."
 runs:
   using: "composite"
   steps:
@@ -45,8 +45,23 @@ runs:
         if: ${{ !inputs.skip && always() }}
         shell: sh
         run: |
-          set -e
-          REPORT_TYPE=${{ inputs.test-name }} npm run ci:test:publish
+          set -eu
+
+          REPORT_TYPE=${{ inputs.test-name }}
+          UPLOAD_PATH=api/app_builder/marketplace_releases/sync
+
+          curl -sSf -XPUT $UPLOAD_HOST/$UPLOAD_PATH -H "Authorization: Token $MPKIT_TOKEN" \
+            -F "marketplace_builder_file_body=@${{ inputs.npm-prefix }}/test-report.html" \
+            -F "path=app/views/pages/$REPORT_PATH-$REPORT_TYPE/index.liquid" \
+            -o /dev/null
+
+          echo test report uploaded: $UPLOAD_HOST/$REPORT_PATH-$REPORT_TYPE
+
+      - name: summary
+        if: ${{ !inputs.skip && failure() }}
+        shell: sh
+        run: |
+          echo "### FAILED $REPORT_TYPE tests report -> $UPLOAD_HOST/$REPORT_PATH-$REPORT_TYPE" >> $GITHUB_STEP_SUMMARY
 
       - name: skip ${{ inputs.test-name }}
         if: ${{ !!inputs.skip }}
