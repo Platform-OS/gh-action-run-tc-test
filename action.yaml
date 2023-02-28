@@ -10,7 +10,9 @@ inputs:
     required: false
   skip:
     required: false
-
+  npm-prefix:
+    required: false
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -31,7 +33,7 @@ runs:
           echo -----REPORT-URL------
           echo $UPLOAD_HOST/$REPORT_PATH-$REPORT_TYPE
           echo --------------
-          npm run ${{ inputs.test-name }}
+          npm run ${{ inputs.test-name }} --prefix ${{ inputs.npm-prefix }}
 
       - name: after ${{ inputs.test-name }}
         if: ${{ inputs.after && !inputs.skip }}
