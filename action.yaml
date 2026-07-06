@@ -25,13 +25,14 @@ runs:
 
       - name: run ${{ inputs.test-name }}
         env:
+          MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
           REPORT_TYPE: ${{ inputs.test-name }}
         if: ${{ !inputs.skip }}
         shell: sh
         run: |
           set -e
           echo -----REPORT-URL------
-          echo ${{ env.TEST_REPORT_MPKIT_URL }}/$REPORT_PATH-$REPORT_TYPE
+          echo $MPKIT_URL/$REPORT_PATH-$REPORT_TYPE
           echo --------------
           npm run ${{ inputs.test-name }} --prefix ${{ inputs.npm-prefix }}
 
@@ -42,6 +43,9 @@ runs:
           ${{ inputs.after }}
 
       - name: publish report ${{ inputs.test-name }}
+        env:
+          MPKIT_TOKEN: ${{ secret.TEST_REPORT_MPKIT_TOKEN }}
+          MPKIT_URL:  ${{ env.TEST_REPORT_MPKIT_URL }}
         if: |
           inputs.test-name != 'tc-update-base-snapshots' || 
           ( !inputs.skip && always() )
@@ -52,12 +56,12 @@ runs:
           REPORT_TYPE=${{ inputs.test-name }}
           UPLOAD_PATH=api/app_builder/marketplace_releases/sync
 
-          curl -sSf -XPUT ${{ env.TEST_REPORT_MPKIT_URL }}/$UPLOAD_PATH -H "Authorization: Token $TEST_REPORT_MPKIT_TOKEN" \
+          curl -sSf -XPUT $MPKIT_URL/$UPLOAD_PATH -H "Authorization: Token $MPKIT_TOKEN" \
             -F "marketplace_builder_file_body=@${{ inputs.npm-prefix }}/test-report.html" \
             -F "path=app/views/pages/$REPORT_PATH-$REPORT_TYPE/index.liquid" \
             -o /dev/null
 
-          echo test report uploaded: ${{ env.TEST_REPORT_MPKIT_URL }}/$REPORT_PATH-$REPORT_TYPE
+          echo test report uploaded: $MPKIT_URL/$REPORT_PATH-$REPORT_TYPE
 
       - name: summary
         if: |
@@ -66,7 +70,8 @@ runs:
         shell: sh
         run: |
           REPORT_TYPE=${{ inputs.test-name }}
-          echo "### FAILED $REPORT_TYPE tests report -> ${{ env.TEST_REPORT_MPKIT_URL }}/$REPORT_PATH-$REPORT_TYPE" >> $GITHUB_STEP_SUMMARY
+          STATUS=${{ steps.run-tests.outcome == 'success' && 'PASSED' || 'FAILED' }}
+          echo "### $STATUS $REPORT_TYPE tests report -> $MPKIT_URL/$REPORT_PATH-$REPORT_TYPE" >> $GITHUB_STEP_SUMMARY
 
       - name: skip ${{ inputs.test-name }}
         if: ${{ !!inputs.skip }}
