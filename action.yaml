@@ -67,8 +67,9 @@ runs:
       shell: sh
       run: |
         REPORT_TYPE=${{ inputs.test-name }}
-        STATUS=${{ steps.run-tests.outcome == 'success' && 'PASSED' || 'FAILED' }}
-        echo "### $STATUS $REPORT_TYPE tests report -> $TEST_REPORT_MPKIT_URL/$REPORT_PATH-$REPORT_TYPE" >> $GITHUB_STEP_SUMMARY
+        echo "### TEST REPORT for ${{ inputs.test-name }}" >> $GITHUB_STEP_SUMMARY
+        echo "#### Status: ${{ steps.run-tests.outcome }} ${{ steps.run-tests.outcome == 'success' && ':white_check_mark:' || ':x:' }}" >> $GITHUB_STEP_SUMMARY
+        echo "#### Test report URL: $TEST_REPORT_MPKIT_URL/$REPORT_PATH-$REPORT_TYPE" >> $GITHUB_STEP_SUMMARY
 
     - name: skip ${{ inputs.test-name }}
       if: ${{ !!inputs.skip }}
